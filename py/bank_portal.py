@@ -12,7 +12,7 @@ rooomieNames = ["Lorenzo-Santor", "davelmondares", "kevin-duke-5"]
 secret = get_secret()
 secretJson = json.loads(secret)
 opts = ChromeOptions()
-service = ChromeService(executable_path="C:\\workspace\\NodeJSProjects\\BillCalculator\\chromedriver-win64\\chromedriver.exe")
+service = ChromeService(executable_path="..\\chromedriver-win64\\chromedriver.exe")
 opts.add_experimental_option("debuggerAddress", "127.0.0.1:8989")
 wb = wd.Chrome(service=service,options=opts)
 wb.implicitly_wait(10)

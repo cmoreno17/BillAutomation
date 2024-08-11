@@ -1,5 +1,5 @@
-const BillAutomation = require('./bill_automation');
-const runScript = require('./run_web_bot');
+const BillAutomation = require('./js/bill_automation');
+const runScript = require('./js/run_web_bot');
 
 const gBillAutomation = new BillAutomation();
 
@@ -10,7 +10,7 @@ function myDailyTask()
     if(billingInfo[0])
     {
       const billAmount = gBillAutomation.splitBills(billingInfo[0])
-      runScript("python .\\bank_portal.py " + `"${billAmount}"` + " " + `"${billingInfo[1]}"`);
+      runScript("python .\\py\\bank_portal.py " + `"${billAmount}"` + " " + `"${billingInfo[1]}"`);
     }
   });
 }

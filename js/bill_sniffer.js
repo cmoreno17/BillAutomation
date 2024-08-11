@@ -1,6 +1,5 @@
 const {https} = require('follow-redirects');
 const Json5 = require('json5');
-const fetchSecret = require('./secretfetcher');
 
 const meter_id= 1646918;
 

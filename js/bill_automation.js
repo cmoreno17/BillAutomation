@@ -11,7 +11,6 @@ class BillAutomation
   {
     const secretJson = JSON.parse(await fetchSecret());
     const electricData = await getElectricBillsJson(secretJson.ElectricToken);
-    const prevElectricData = JSON.parse(Fs.readFileSync('./CurrentBillData.json'));
     const prevWebbotData = JSON.parse(Fs.readFileSync('./WebbotData.json'));
     let billTotal = 0;
     let description = "";
@@ -24,8 +23,8 @@ class BillAutomation
       description = description + "Electric Bill " + electricData.bill_end_date.toString().split('T')[0] + ", ";
     }
     const promiseArray = [];
-    const waterPromise = runScript('python .\\water_portal.py');
-    const internetPromise = runScript('python .\\internet_portal.py');
+    const waterPromise = runScript('python .\\py\\water_portal.py');
+    const internetPromise = runScript('python .\\py\\internet_portal.py');
     const waterData = await waterPromise;
     const internetData = await internetPromise;
     const waterString = waterData.replaceAll('\'', '"').replaceAll('$ ', '');
