@@ -129,3 +129,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 /py/__pycache__/secret.cpython-312.pyc
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

@@ -26,13 +26,12 @@ function getElectricBillsJson(electricToken)
     {  
       response.on('data', chunk => 
       {
-        console.log(chunk);
         data += chunk;
       });
       response.on('end', () => 
       {
         const dataJson = Json5.parse(data);
-        console.log(dataJson);
+        console.log('Successfully retrieved latest electric bill data.');
         resolve(dataJson.bills[0].base);
       });
     })

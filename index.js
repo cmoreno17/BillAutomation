@@ -1,5 +1,7 @@
 const BillAutomation = require('./js/bill_automation');
 const runScript = require('./js/run_web_bot');
+const sendEmail = require('./js/email_client');
+const venmoLogin = require('./tests/venmo_portal.spec');
 
 const gBillAutomation = new BillAutomation();
 
@@ -9,8 +11,18 @@ function myDailyTask()
   {
     if(billingInfo[0])
     {
-      const billAmount = gBillAutomation.splitBills(billingInfo[0])
-      runScript("python .\\py\\bank_portal.py " + `"${billAmount}"` + " " + `"${billingInfo[1]}"`);
+      console.log('Running venmo bot to charge roommates...');
+      const billAmount = gBillAutomation.splitBills(billingInfo[0]);
+      venmoLogin(billAmount.toString(), billingInfo[1])
+      .then(result=>
+      {
+        console.log(result);
+        sendEmail(result).catch(console.error);
+      });
+    }
+    else
+    {
+      console.log('No new bills found, will check again tomorrow.');
     }
   });
 }

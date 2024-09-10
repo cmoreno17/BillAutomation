@@ -2,6 +2,8 @@ const getElectricBillsJson = require('./bill_sniffer');
 const Fs = require('fs');
 const runScript = require('./run_web_bot');
 const fetchSecret = require('./secretfetcher');
+const internetLogin = require ('../tests/internet_portal.spec.js');
+const waterLogin = require('../tests/water_portal.spec.js');
 
 class BillAutomation
 {
@@ -22,14 +24,14 @@ class BillAutomation
       billTotal = Math.round((billTotal + electricBill)* 100) / 100;
       description = description + "Electric Bill " + electricData.bill_end_date.toString().split('T')[0] + ", ";
     }
-    const promiseArray = [];
-    const waterPromise = runScript('python .\\py\\water_portal.py');
-    const internetPromise = runScript('python .\\py\\internet_portal.py');
+    console.log('Running Water and Internet utilities login bots...');
+    const waterPromise = waterLogin();
+    const internetPromise = internetLogin();
     const waterData = await waterPromise;
     const internetData = await internetPromise;
     const waterString = waterData.replaceAll('\'', '"').replaceAll('$ ', '');
     const waterJson = JSON.parse(waterString);
-    const internetString = internetData.replaceAll('\'', '"').replaceAll('$', '');
+    const internetString = internetData.replaceAll(' "', '"').replaceAll('" ', '"').replaceAll('$', '');
     const internetJson = JSON.parse(internetString);
     if(waterJson.latest_water_bill_date !== prevWebbotData.latest_water_bill_date)
     {
@@ -39,18 +41,21 @@ class BillAutomation
       Fs.writeFileSync('./WebbotData.json', JSON.stringify(prevWebbotData));
       const waterBill = Math.round(parseFloat(waterJson.latest_water_bill_amount)* 100) / 100;
       billTotal = Math.round((billTotal + waterBill) * 100) / 100;
-      description = description + "Water Bill " + waterJson.latest_water_bill_date + ", ";
+      const latestBillString = waterJson.latest_water_bill_date.toString().replaceAll('/', '-')
+      description = description + "Water Bill " + latestBillString + ", ";
     }
     if(internetJson.latest_internet_bill_date !== prevWebbotData.latest_internet_bill_date)
     {
       prevWebbotData.latest_internet_bill_date = internetJson.latest_internet_bill_date;
       prevWebbotData.latest_internet_bill_amount = Math.abs(internetJson.latest_internet_bill_amount).toString();
       Fs.writeFileSync('./WebbotData.json', JSON.stringify(prevWebbotData));
-      const internetBill = Math.round(parseFloat(internetJson.latest_internet_bill_amount)* 100) / 100;
+      const internetBill = Math.round(Math.abs(parseFloat(internetJson.latest_internet_bill_amount))* 100) / 100;
       billTotal = Math.round((billTotal + internetBill) * 100) / 100;
-      description = description + "Internet Bill " + internetJson.latest_internet_bill_date;
+      const latestBillString = internetJson.latest_internet_bill_date.toString().replaceAll('/', '-')
+      description = description + "Internet Bill " + latestBillString + ", ";
     }
     
+    description = description.slice(0,description.lastIndexOf(','));
     return [billTotal, description];
   }
 
