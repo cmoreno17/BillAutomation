@@ -1,9 +1,8 @@
 const getElectricBillsJson = require('./bill_sniffer');
 const Fs = require('fs');
-const runScript = require('./run_web_bot');
 const fetchSecret = require('./secretfetcher');
-const internetLogin = require ('../tests/internet_portal.spec.js');
-const waterLogin = require('../tests/water_portal.spec.js');
+const internetLogin = require ('../selenium/internet_portal');
+const waterLogin = require('../selenium/water_portal');
 
 class BillAutomation
 {
@@ -25,10 +24,10 @@ class BillAutomation
       description = description + "Electric Bill " + electricData.bill_end_date.toString().split('T')[0] + ", ";
     }
     console.log('Running Water and Internet utilities login bots...');
-    const waterPromise = waterLogin();
-    const internetPromise = internetLogin();
-    const waterData = await waterPromise;
-    const internetData = await internetPromise;
+    const waterData = await waterLogin();
+    const internetData = await internetLogin();
+    //const waterData = await waterPromise;
+    //const internetData = await internetPromise;
     const waterString = waterData.replaceAll('\'', '"').replaceAll('$ ', '');
     const waterJson = JSON.parse(waterString);
     const internetString = internetData.replaceAll(' "', '"').replaceAll('" ', '"').replaceAll('$', '');

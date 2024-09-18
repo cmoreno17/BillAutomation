@@ -1,7 +1,7 @@
 const BillAutomation = require('./js/bill_automation');
 const runScript = require('./js/run_web_bot');
 const sendEmail = require('./js/email_client');
-const venmoLogin = require('./tests/venmo_portal.spec');
+const venmoLogin = require('./selenium/venmo_portal');
 
 const gBillAutomation = new BillAutomation();
 

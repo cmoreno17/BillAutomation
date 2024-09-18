@@ -1,13 +1,22 @@
 const fetchSecret = require('../js/secretfetcher');
 const { test, chromium, playwright } = require('@playwright/test');
 
-module.exports = async function venmoLogin(amount, description) {
+module.exports = async function venmoLogin(amount, description)
+{
   const rooomieNames = ["Lorenzo-Santor", "davelmondares", "kevin-duke-5"];
-  const userDataDir = '/home/pi/testprofile1';
+  const userDataDir = 'C:\\Users\\chris\\Documents\\testprofile1';
   const secret = await fetchSecret();
   const secretJson = JSON.parse(secret);
-  const browserContext = await chromium.launchPersistentContext(userDataDir);
+  const browserContext = await chromium.launchPersistentContext(userDataDir, {
+    args: [
+      // Huge gains when you don't need visual output
+      '--disable-gl-drawing-for-tests',
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
+  });
   const page = await browserContext.newPage();
+  page.setDefaultTimeout(120000);
   await page.goto("https://id.venmo.com/signin?country.x=US&locale.x=en#/lgn");
   await page.locator('//input[@id="password"]').fill(secretJson['VenmoPass']);
   await page.locator('//button[@id="btnLogin"]').click();

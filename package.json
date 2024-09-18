@@ -10,7 +10,9 @@
     "json5": "^2.2.3",
     "nodemailer": "^6.9.14",
     "playwright": "^1.47.0",
-    "url": "^0.11.4"
+    "selenium-webdriver": "^4.24.0",
+    "url": "^0.11.4",
+    "mocha": "10.7.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.46.0",
